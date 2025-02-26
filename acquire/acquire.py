@@ -322,8 +322,13 @@ class NTFS(Module):
     def _run(cls, target: Target, cli_args: argparse.Namespace, collector: Collector) -> None:
         for fs, main_mountpoint, name, mountpoints in iter_ntfs_filesystems(target):
             log.info("Acquiring from %s as %s (%s)", fs, name, mountpoints)
-
-            for filename in ("$MFT", "$Boot", "$Secure:$SDS"):
+            NTFS_FILES = (
+                          "$MFT",
+                          "$Boot",
+                          "$Secure:$SDS",
+                          "$Secure:$SII"
+            )
+            for filename in NTFS_FILES:
                 if main_mountpoint is not None:
                     path = fsutil.join(main_mountpoint, filename)
                     collector.collect_path(path)
